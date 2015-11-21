@@ -8,5 +8,5 @@
     <string name="MapLabel">Map</string>
     <string name="title_activity_ibeacon">IBeaconActivity</string>
     <string name="withoutdata">Without data</string>
-
+    <string name="_text_info_shared_successfully">Information was mutually shared successfully!</string>
 </resources>
