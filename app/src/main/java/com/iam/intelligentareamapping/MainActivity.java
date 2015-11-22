@@ -1,5 +1,6 @@
 package com.iam.intelligentareamapping;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,8 +15,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kontakt.sdk.android.ble.connection.OnServiceReadyListener;
+import com.kontakt.sdk.android.ble.util.BluetoothUtils;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private BeaconAdapter beaconAdapter;
+    private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,23 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+    @Override
+    protected void onStart() {
+
+        super.onStart();
+        if (!BluetoothUtils.isBluetoothEnabled()) {
+            final Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(intent, REQUEST_CODE_ENABLE_BLUETOOTH);
+        } else {
+            beaconAdapter = new BeaconAdapter(getApplicationContext());
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        beaconAdapter.finishScan();
     }
 
     @Override

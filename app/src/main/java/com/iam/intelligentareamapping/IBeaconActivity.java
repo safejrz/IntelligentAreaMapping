@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -29,7 +30,9 @@ import com.kontakt.sdk.android.common.profile.IBeaconDevice;
 import com.kontakt.sdk.android.common.profile.IBeaconRegion;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -39,8 +42,8 @@ public class IBeaconActivity extends AppCompatActivity implements ProximityManag
     private ScanContext scanContext;
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 1;
 
-    private List<EventType> eventTypes = Arrays.asList(EventType.SPACE_ENTERED,
-            EventType.SPACE_ABANDONED,
+    private List<EventType> eventTypes = Arrays.asList(
+            EventType.DEVICE_LOST,
             EventType.DEVICE_DISCOVERED,
             EventType.DEVICES_UPDATE);
 
@@ -59,7 +62,7 @@ public class IBeaconActivity extends AppCompatActivity implements ProximityManag
 
     private ScanContext createScanContext() {
         return new ScanContext.Builder()
-                .setScanPeriod(new ScanPeriod(TimeUnit.SECONDS.toMillis(5), TimeUnit.SECONDS.toMillis(5)))
+                .setScanPeriod(new ScanPeriod(3000,2000))
                 .setScanMode(ProximityManager.SCAN_MODE_LOW_LATENCY)
                 .setActivityCheckConfiguration(ActivityCheckConfiguration.DEFAULT)
                 .setIBeaconScanContext(getIBeaconScanContext())
@@ -84,7 +87,6 @@ public class IBeaconActivity extends AppCompatActivity implements ProximityManag
         });
 
         deviceManager = new ProximityManager(this);
-
         scanContext = createScanContext();
     }
 
@@ -139,6 +141,7 @@ public class IBeaconActivity extends AppCompatActivity implements ProximityManag
         IBeaconDeviceEvent iBeaconDeviceEvent = (IBeaconDeviceEvent) event;
         final IBeaconRegion region = iBeaconDeviceEvent.getRegion();
         final List<IBeaconDevice> devicesList = iBeaconDeviceEvent.getDeviceList();
+        Log.i("iam.com","Event received at"+new GregorianCalendar());
 
 
 
@@ -146,6 +149,25 @@ public class IBeaconActivity extends AppCompatActivity implements ProximityManag
             @Override
             public void run() {
                 switch (event.getEventType()) {
+                    case SPACE_ENTERED:
+                        for(IBeaconDevice ibd: devicesList)
+                            Log.i("EVENTOS", "Space entered "+ibd.getUniqueId() );
+                        break;
+                    case DEVICE_DISCOVERED:
+                        for(IBeaconDevice ibd: devicesList)
+                            Log.i("EVENTOS", "device discovered "+ibd.getUniqueId() );
+                        break;
+                    case DEVICES_UPDATE:
+                        for(IBeaconDevice ibd: devicesList)
+                            Log.i("EVENTOS", "Device updated "+ibd.getUniqueId() );
+                        printDevices(devicesList);
+                        break;
+                    case DEVICE_LOST:
+                        for(IBeaconDevice ibd: devicesList)
+                            Log.i("EVENTOS", "device lost "+ibd.getUniqueId() );
+                        break;
+                }
+                /*switch (event.getEventType()) {
                     case SPACE_ENTERED:
 
                         break;
@@ -157,7 +179,7 @@ public class IBeaconActivity extends AppCompatActivity implements ProximityManag
                         break;
                     case SPACE_ABANDONED:
                         break;
-                }
+                }*/
             }
         });
     }
