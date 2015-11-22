@@ -1,6 +1,7 @@
 package com.iam.intelligentareamapping;
 
 import com.kontakt.sdk.android.ble.device.BeaconDevice;
+import com.kontakt.sdk.android.common.profile.IBeaconDevice;
 
 import java.util.ArrayList;
 import java.util.Vector;
@@ -8,18 +9,18 @@ import java.util.Vector;
 /**
  * Created by jaime on 11/21/15.
  */
-public class SortedByDistanceList extends Vector<BeaconDevice>
+public class SortedByDistanceList extends Vector<IBeaconDevice>
 {
 
     @Override
-    public boolean add(BeaconDevice bd)
+    public boolean add(IBeaconDevice bd)
     {
        int position = getPositionToInsert(bd, 0,size()-1);
        add(position,bd);
        return true;
     }
 
-    private int getPositionToInsert(BeaconDevice bd, int startPoint, int endPoint)
+    private int getPositionToInsert(IBeaconDevice bd, int startPoint, int endPoint)
     {
         if(startPoint > endPoint ) return startPoint;
         else
