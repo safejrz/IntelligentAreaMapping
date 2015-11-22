@@ -21,21 +21,28 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageMap"
-            android:src="@drawable/mapimage"
-            android:layout_alignParentStart="true"
-            android:contentDescription="@string/MapLabel" />
-         <ImageView
-            android:paddingLeft="50dp"
-            android:paddingTop="250dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageDot"
-            android:src="@drawable/dot"
-            android:layout_alignParentStart="true"
-            android:contentDescription="@string/MapLabel" />
+        <!--    <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageMap"
+                android:src="@drawable/mapimage"
+                android:layout_alignParentStart="true"
+                android:contentDescription="@string/MapLabel" />
+             <ImageView
+                android:paddingLeft="50dp"
+                android:paddingTop="250dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageDot"
+                android:src="@drawable/dot"
+                android:layout_alignParentStart="true"
+                android:contentDescription="@string/MapLabel" /> -->
+        <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+        </FrameLayout>
+
     </RelativeLayout>
 </RelativeLayout>
