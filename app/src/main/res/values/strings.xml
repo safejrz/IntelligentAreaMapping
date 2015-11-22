@@ -14,4 +14,5 @@
     <string name="expositor_phone_label">Phone:</string>
     <string name="expositor_email_label">email</string>
     <string name="expositor_website_label">Website:</string>
+    <string name="welcome_text">Welcome to the Expo!</string>
 </resources>
