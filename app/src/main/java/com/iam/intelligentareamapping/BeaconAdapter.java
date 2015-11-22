@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -37,6 +38,7 @@ public class BeaconAdapter implements ProximityManager.ProximityListener
     private TreeSet<Expositor> expositorsVisited = new TreeSet<Expositor>();
     private ProximityManager deviceManager;
     private ScanContext scanContext;
+    private TreeSet<IBeaconDevice> activeDevices;
 
 
     private List<EventType> eventTypes = Arrays.asList(EventType.DEVICE_LOST, EventType.DEVICE_DISCOVERED, EventType.DEVICES_UPDATE);
@@ -45,6 +47,7 @@ public class BeaconAdapter implements ProximityManager.ProximityListener
     {
         deviceManager = new ProximityManager(ctx);
         scanContext = createScanContext();
+        activeDevices = new TreeSet<IBeaconDevice>();
         deviceManager.initializeScan(scanContext, new OnServiceReadyListener() {
             @Override
             public void onServiceReady() {
@@ -98,19 +101,24 @@ public class BeaconAdapter implements ProximityManager.ProximityListener
         final List<IBeaconDevice> filteredDevicesList = filterDevices(devicesList);
         switch (event.getEventType()) {
             case DEVICE_DISCOVERED:
-                for(IBeaconDevice ibd: filteredDevicesList)
-                    Log.i("EVENTOS", "device discovered "+ibd.getUniqueId() );
+                activeDevices.addAll(filteredDevicesList);
                 break;
             case DEVICES_UPDATE:
                 for(IBeaconDevice ibd: filteredDevicesList)
-                    Log.i("EVENTOS", "Device updated "+ibd.getUniqueId() );
+                    //Log.i("EVENTOS", "Device updated "+ibd.getUniqueId() );
                 printDevices(devicesList);
                 break;
             case DEVICE_LOST:
-                for(IBeaconDevice ibd: filteredDevicesList)
-                    Log.i("EVENTOS", "Device lost "+ibd.getUniqueId() );
-               break;
+                activeDevices.removeAll(filteredDevicesList);
+                break;
         }
+        StringBuffer activeBeaconsList = new StringBuffer("Beacons { ");
+        for (IBeaconDevice bd: activeDevices)
+        {
+            activeBeaconsList.append(""+bd.getUniqueId()+" ");
+        }
+        activeBeaconsList.append("}");
+        Log.i("ActiveBeacons",activeBeaconsList.toString());
     }
 
     private List<IBeaconDevice> filterDevices(List<IBeaconDevice> deviceList)
@@ -150,6 +158,11 @@ public class BeaconAdapter implements ProximityManager.ProximityListener
             devicesStr+= "-------------------------------" + "\n";
 
         }
+    }
+
+    public Set<IBeaconDevice> getActiveDevices()
+    {
+        return activeDevices;
     }
 
     public void finishScan() {

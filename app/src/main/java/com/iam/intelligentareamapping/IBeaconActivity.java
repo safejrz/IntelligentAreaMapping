@@ -141,9 +141,6 @@ public class IBeaconActivity extends AppCompatActivity implements ProximityManag
         IBeaconDeviceEvent iBeaconDeviceEvent = (IBeaconDeviceEvent) event;
         final IBeaconRegion region = iBeaconDeviceEvent.getRegion();
         final List<IBeaconDevice> devicesList = iBeaconDeviceEvent.getDeviceList();
-        Log.i("iam.com","Event received at"+new GregorianCalendar());
-
-
 
         runOnUiThread(new Runnable() {
             @Override
