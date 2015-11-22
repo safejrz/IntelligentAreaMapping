@@ -8,5 +8,10 @@
     <string name="MapLabel">Map</string>
     <string name="title_activity_ibeacon">IBeaconActivity</string>
     <string name="withoutdata">Without data</string>
-
+    <string name="_text_info_shared_successfully">Information was mutually shared successfully!</string>
+    <string name="expositor_name_label">Exhibitor:</string>
+    <string name="expositor_description_label">Description:</string>
+    <string name="expositor_phone_label">Phone:</string>
+    <string name="expositor_email_label">email</string>
+    <string name="expositor_website_label">Website:</string>
 </resources>
