@@ -121,7 +121,7 @@ public class BeaconAdapter implements ProximityManager.ProximityListener
             }
             activeBeaconsList.append("}");
             Log.i("ActiveBeacons", activeBeaconsList.toString());
-            List<IBeaconDevice> nearDevices = getNearActiveDevices();
+            List<IBeaconDevice> nearDevices = getNearDevices();
             activeBeaconsList = new StringBuffer("Near Beacons Activos { ");
             for (IBeaconDevice bd : nearDevices) {
                 activeBeaconsList.append("" + bd.getUniqueId() + ":" + bd.getProximity() + ":" + bd.getDistance() + " ");
@@ -176,12 +176,17 @@ public class BeaconAdapter implements ProximityManager.ProximityListener
         return activeDevices;
     }
 
-    public List<IBeaconDevice> getNearActiveDevices()
+    public List<IBeaconDevice> getNearDevices() { return getActiveDevices(Proximity.NEAR); }
+    public List<IBeaconDevice> getFarDevices() { return getActiveDevices(Proximity.FAR); }
+    public List<IBeaconDevice> getImmediateDevices() { return getActiveDevices(Proximity.IMMEDIATE); }
+
+
+    private List<IBeaconDevice> getActiveDevices(Proximity proximity)
     {
         List<IBeaconDevice> nearDevices = new ArrayList<IBeaconDevice>();
         for(IBeaconDevice ibd: getActiveDevices())
         {
-            if(ibd.getProximity() == Proximity.NEAR)
+            if(ibd.getProximity() == proximity)
               nearDevices.add(ibd);
         }
         return nearDevices;
