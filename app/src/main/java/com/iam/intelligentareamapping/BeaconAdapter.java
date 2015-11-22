@@ -112,7 +112,7 @@ public class BeaconAdapter implements ProximityManager.ProximityListener
                 activeDevices.removeAll(filteredDevicesList);
                 break;
         }
-        StringBuffer activeBeaconsList = new StringBuffer("Beacons { ");
+        StringBuffer activeBeaconsList = new StringBuffer("Beacons Activos { ");
         for (IBeaconDevice bd: activeDevices)
         {
             activeBeaconsList.append(""+bd.getUniqueId()+" ");
