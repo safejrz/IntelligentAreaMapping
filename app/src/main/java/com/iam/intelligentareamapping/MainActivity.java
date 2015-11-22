@@ -1,7 +1,6 @@
 package com.iam.intelligentareamapping;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,8 +44,8 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, FragmentBlank.getInstance()).commit();
+        //FragmentManager fragmentManager = getFragmentManager();
+        //fragmentManager.beginTransaction().replace(R.id.content_frame, FragmentBlank.getInstance()).commit();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
