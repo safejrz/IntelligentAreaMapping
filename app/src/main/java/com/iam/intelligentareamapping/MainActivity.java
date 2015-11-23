@@ -3,11 +3,15 @@ package com.iam.intelligentareamapping;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanRecord;
+import android.bluetooth.le.ScanResult;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,23 +22,54 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kontakt.sdk.android.ble.configuration.scan.IBeaconScanContext;
+import com.kontakt.sdk.android.ble.configuration.scan.ScanContext;
 import com.kontakt.sdk.android.ble.connection.OnServiceReadyListener;
+import com.kontakt.sdk.android.ble.discovery.BluetoothDeviceEvent;
+import com.kontakt.sdk.android.ble.discovery.EventType;
+import com.kontakt.sdk.android.ble.filter.ibeacon.IBeaconFilters;
+import com.kontakt.sdk.android.ble.manager.ProximityManager;
+import com.kontakt.sdk.android.ble.rssi.RssiCalculators;
 import com.kontakt.sdk.android.ble.util.BluetoothUtils;
+import com.kontakt.sdk.android.common.KontaktSDK;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.jar.Manifest;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private BeaconAdapter beaconAdapter;
+    private Menu mMenu;
+    //private BeaconAdapter beaconAdapter;
+    private ProximityManager deviceManager;
+    private ScanContext scanContext;
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 1;
+
+    private List<EventType> eventTypes = Arrays.asList(
+            EventType.DEVICE_LOST,
+            EventType.DEVICE_DISCOVERED,
+            EventType.DEVICES_UPDATE);
+
+    protected IBeaconScanContext iBeaconScanContext = new IBeaconScanContext.Builder()
+            .setIBeaconFilters(Collections.singleton(
+                    IBeaconFilters.newProximityUUIDFilter(KontaktSDK.DEFAULT_KONTAKT_BEACON_PROXIMITY_UUID)
+            ))
+            .setEventTypes(eventTypes)
+            .setRssiCalculator(RssiCalculators.newLimitedMeanRssiCalculator(5))
+            .build();
+
+
+    IBeaconScanContext getIBeaconScanContext() {
+        return iBeaconScanContext;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ActivityCompat.requestPermissions(this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},1);
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -50,7 +85,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        deviceManager = new ProximityManager(this);
+        scanContext = createScanContext();
     }
+
     @Override
     protected void onStart() {
 
@@ -60,6 +99,7 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(intent, REQUEST_CODE_ENABLE_BLUETOOTH);
         } else {
             beaconAdapter = new BeaconAdapter(getApplicationContext());
+            beaconAdapter.
         }
     }
 
